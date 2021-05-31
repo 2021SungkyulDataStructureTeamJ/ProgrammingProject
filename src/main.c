@@ -1,21 +1,5 @@
 #include <stdio.h>
 
-// linked list node
-typedef struct node
-{
-	void *data;
-	struct node *prev;
-	struct node *next;
-} Node;
-
-// linked list
-typedef struct
-{
-	Node *head;
-	Node *tail;
-	size_t size;
-} LinkedList;
-
 typedef struct
 {
 	int x;

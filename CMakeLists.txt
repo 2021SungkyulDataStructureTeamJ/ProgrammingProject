@@ -4,4 +4,5 @@ project(ProgrammingProject C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(ProgrammingProject
-        src/main.c)
+        src/main.c
+        src/list.c)
