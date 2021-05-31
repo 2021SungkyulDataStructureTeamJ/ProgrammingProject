@@ -22,7 +22,7 @@ typedef struct
 // 초기화된 새로운 리스트를 반환합니다.
 LinkedList *ListNew();
 
-// 리스트를 초기화합니다.
+// 리스트의 모든 원소를 제거합니다.
 void ListClear(LinkedList *list);
 
 // 해당 위치에 새로운 노드를 추가합니다.

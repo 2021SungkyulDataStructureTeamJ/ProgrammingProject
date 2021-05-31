@@ -1,3 +1,6 @@
+#include <errno.h>
+#include <stdio.h>
+
 #include "list.h"
 
 LinkedList *ListNew()
@@ -20,7 +23,10 @@ LinkedList *ListNew()
 
 void ListClear(LinkedList *list)
 {
-
+	while (list->size)
+	{
+		ListDeleteNode(list, 0);
+	}
 }
 
 void ListAddNode(LinkedList *list, int pos, void *data)
@@ -35,6 +41,11 @@ void ListDeleteNode(LinkedList *list, int pos)
 
 Node *ListGetNode(LinkedList *list, int pos)
 {
+	if (pos < 0 || list->size < pos)
+	{
+		perror("잘못된 위치");
+		exit(1);
+	}
 	return NULL;
 }
 
