@@ -1,1 +1,9 @@
-# ProgrammingProject
+# 데이터구조 팀J
+
+서장현
+
+오승민
+
+심다은
+
+오예찬
