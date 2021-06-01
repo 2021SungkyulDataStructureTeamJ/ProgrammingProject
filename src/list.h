@@ -11,6 +11,12 @@ typedef struct node
 	struct node *next;
 } Node;
 
+// 현재 노드의 다음 노드를 반환합니다.
+Node *Next(Node *node);
+
+// 현재 노드의 이전 노드를 반환합니다.
+Node *Prev(Node *node);
+
 // linked list
 typedef struct
 {
