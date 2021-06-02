@@ -1,7 +1,18 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef LIST_H
+#define LIST_H
 
 #include <stdlib.h>
+
+// boolean 타입을 정의합니다.
+#ifndef false
+#define false 0
+#endif
+#ifndef true
+#define true 1
+#endif
+#ifndef bool
+#define bool int
+#endif
 
 // linked list node
 typedef struct node
@@ -29,7 +40,7 @@ typedef struct
 LinkedList *ListNew();
 
 // 리스트의 모든 원소를 제거합니다.
-void ListClear(LinkedList *list);
+void ListClear(LinkedList *list, bool freeData);
 
 // 해당 위치에 새로운 노드를 추가합니다.
 void ListAddNode(LinkedList *list, int pos, void *data);
@@ -42,5 +53,12 @@ Node *ListGetNode(LinkedList *list, int pos);
 
 // 리스트의 길이를 반환합니다.
 int ListGetSize(LinkedList *list);
+
+// 리스트가 비어있는지를 반환합니다.
+bool ListIsEmpty(LinkedList *list);
+
+// 해당 위치가 유효한 위치인지를 체크합니다.
+// includeEnd 가 true 일시, tail 더미노드의 인덱스를 유효한 것으로 취급합니다.
+bool ListIndexCheck(LinkedList *list, int pos, bool includeEnd);
 
 #endif
