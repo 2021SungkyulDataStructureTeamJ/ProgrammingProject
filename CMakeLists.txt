@@ -6,5 +6,5 @@ set(CMAKE_C_STANDARD 11)
 add_executable(ProgrammingProject
         src/main.c
         src/list.c
-        src/queue.c
+        src/stack.c
         src/maze.c)
