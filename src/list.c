@@ -1,11 +1,11 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <string.h>
 
 #include "list.h"
 
 Node *Next(Node *node)
 {
-	// 노드 포인터가 NULL 이거나, 노드의 다음 노드가 NULL 이라면, NULL 을 반환합니다.
+	// 노드 포인터가 NULL이거나, 노드의 다음 노드가 NULL 이라면, NULL 을 반환합니다.
 	if (!node || !node->next)
 	{
 		return NULL;
@@ -16,7 +16,7 @@ Node *Next(Node *node)
 
 Node *Prev(Node *node)
 {
-	// 노드 포인터가 NULL 이거나, 노드의 이전 노드가 NULL 이라면, NULL 을 반환합니다.
+	// 노드 포인터가 NULL이거나, 노드의 이전 노드가 NULL 이라면, NULL 을 반환합니다.
 	if (!node || !node->prev)
 	{
 		return NULL;
@@ -30,7 +30,7 @@ LinkedList *ListNew()
 	// 새로운 리스트를 할당합니다.
 	LinkedList *list = calloc(1, sizeof(LinkedList));
 	
-	// 노드의 head 와 tail 에 내용이 없는 더미노드를 할당합니다.
+	// 노드의 head와 tail에 내용이 없는 더미노드를 할당합니다.
 	list->head = calloc(1, sizeof(Node));
 	list->tail = calloc(1, sizeof(Node));
 	// 사이즈를 0으로 설정합니다.
@@ -56,7 +56,7 @@ void ListClear(LinkedList *list, bool freeData)
 	// 리스트의 사이즈가 0이 될때까지 맨 앞의 노드를 삭제합니다.
 	while (list->size)
 	{
-		// freeData 가 true 일 경우, data 의 동적 할당을 해제합니다.
+		// freeData 가 true일 경우, data의 동적 할당을 해제합니다.
 		if (freeData)
 		{
 			free(ListGetNode(list, 0)->data);
@@ -74,7 +74,7 @@ void ListAddNode(LinkedList *list, int pos, void *data)
 	}
 	
 	Node *cur = list->tail;
-	if (pos < ListGetSize(list))
+	if (pos < ListSize(list))
 	{
 		cur = ListGetNode(list, pos);
 	}
@@ -144,10 +144,10 @@ Node *ListGetNode(LinkedList *list, int pos)
 	int i = -1;
 	// 리스트 순회를 위한 커서를 head 더미노드로 설정합니다.
 	Node *cur = list->head;
-	// 다음 노드를 반환하는 함수포인터를 Next 로 설정합니다.
+	// 다음 노드를 반환하는 함수포인터를 Next로 설정합니다.
 	Node *(*next)(Node *) = Next;
 	
-	// 찾아야 하는 위치가 size 의 절반보다 뒤에 있다면
+	// 찾아야 하는 위치가 size의 절반보다 뒤에 있다면
 	// 탐색 횟수를 줄이기 위하여, 뒤에서부터 탐색합니다.
 	if (list->size / 2 <= pos)
 	{
@@ -157,7 +157,7 @@ Node *ListGetNode(LinkedList *list, int pos)
 		i = list->size;
 		// 커서를 tail 더미노드로 설정합니다.
 		cur = list->tail;
-		// 다음 노드를 반환하는 함수포인터를 Prev 로 설정합니다.
+		// 다음 노드를 반환하는 함수포인터를 Prev로 설정합니다.
 		next = Prev;
 	}
 	
@@ -171,7 +171,7 @@ Node *ListGetNode(LinkedList *list, int pos)
 	return cur;
 }
 
-int ListGetSize(LinkedList *list)
+int ListSize(LinkedList *list)
 {
 	// 리스트의 사이즈를 반환합니다.
 	return list->size;
@@ -185,15 +185,45 @@ bool ListIsEmpty(LinkedList *list)
 
 bool ListIndexCheck(LinkedList *list, int pos, bool includeEnd)
 {
-	// includeEnd 가 true 라면, pos == size 인 경우가 허용됩니다.
+	// includeEnd 가 true라면, pos == size인 경우가 허용됩니다.
 	if (includeEnd == true && pos == list->size)
 	{
 		return true;
 	}
-	// pos 가 리스트 내부의 인덱스를 가리키는지 체크합니다.
+	// pos가 리스트 내부의 인덱스를 가리키는지 체크합니다.
 	if (pos < 0 || list->size <= pos)
 	{
 		return false;
 	}
 	return true;
+}
+
+int ListFind(LinkedList *list, void *data, int size)
+{
+	// 리스트가 비어있다면, -1을 반환합니다.
+	if (list->size == 0)
+	{
+		return -1;
+	}
+	
+	Node *cur = list->head->next;
+	for (int i = 0; i < list->size; i++)
+	{
+		// 커서의 동적할당 사이즈를 받아옵니다.
+		int curSize = MALLOC_SIZE(cur->data);
+		
+		// 커서의 사이즈가 data의 사이즈보다 작다면
+		// 최소한 커서에 data와 같은 정보가 들어있지는 않을 것입니다.
+		if (curSize < size)
+		{
+			continue;
+		}
+		
+		// size만큼의 메모리를 비교하였을 때, 값이 일치한다면, 해당 인덱스를 반환합니다.
+		if (memcmp(cur->data, data, size) == 0)
+		{
+			return i;
+		}
+	}
+	return -1;
 }

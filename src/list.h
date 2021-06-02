@@ -1,7 +1,15 @@
-#ifndef LIST_H
+﻿#ifndef LIST_H
 #define LIST_H
 
 #include <stdlib.h>
+#include <malloc.h>
+
+// malloc_usable_size와 _msize는 동적할당된 메모리의 크기를 알아내는 함수입니다.
+#ifdef _WIN32
+#define MALLOC_SIZE _msize
+#elif defined(__linux__)
+#define MALLOC_SIZE malloc_usable_size
+#endif
 
 // boolean 타입을 정의합니다.
 #ifndef false
@@ -52,13 +60,17 @@ void ListDeleteNode(LinkedList *list, int pos);
 Node *ListGetNode(LinkedList *list, int pos);
 
 // 리스트의 길이를 반환합니다.
-int ListGetSize(LinkedList *list);
+int ListSize(LinkedList *list);
 
 // 리스트가 비어있는지를 반환합니다.
 bool ListIsEmpty(LinkedList *list);
 
 // 해당 위치가 유효한 위치인지를 체크합니다.
-// includeEnd 가 true 일시, tail 더미노드의 인덱스를 유효한 것으로 취급합니다.
+// includeEnd가 true일시, tail 더미노드의 인덱스를 유효한 것으로 취급합니다.
 bool ListIndexCheck(LinkedList *list, int pos, bool includeEnd);
+
+// 데이터와 메모리 사이즈를 넣으면, 리스트에서 해당 데이터가 있는 노드의 위치를 반환합니다.
+// 데이터가 없다면 -1을 반환합니다.
+int ListFind(LinkedList *list, void *data, int size);
 
 #endif
