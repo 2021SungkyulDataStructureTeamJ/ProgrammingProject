@@ -3,7 +3,7 @@
 
 #include "list.h"
 
-Node *Next(Node *node)
+Node *NodeNext(Node *node)
 {
 	// 노드 포인터가 NULL이거나, 노드의 다음 노드가 NULL 이라면, NULL 을 반환합니다.
 	if (!node || !node->next)
@@ -14,7 +14,7 @@ Node *Next(Node *node)
 	return node->next;
 }
 
-Node *Prev(Node *node)
+Node *NodePrev(Node *node)
 {
 	// 노드 포인터가 NULL이거나, 노드의 이전 노드가 NULL 이라면, NULL 을 반환합니다.
 	if (!node || !node->prev)
@@ -25,11 +25,20 @@ Node *Prev(Node *node)
 	return node->prev;
 }
 
-LinkedList *ListNew()
+void NodeGetData(Node *node, void *data)
 {
-	// 새로운 리스트를 할당합니다.
-	LinkedList *list = calloc(1, sizeof(LinkedList));
-	
+	memcpy(data, node->data, node->size);
+}
+
+void NodeSetData(Node *node, void *data, int size)
+{
+	realloc(node->data, size);
+	memcpy(node->data, data, size);
+	node->size = size;
+}
+
+void ListInit(LinkedList *list)
+{
 	// 노드의 head와 tail에 내용이 없는 더미노드를 할당합니다.
 	list->head = calloc(1, sizeof(Node));
 	list->tail = calloc(1, sizeof(Node));
@@ -46,26 +55,18 @@ LinkedList *ListNew()
 	list->tail->data = NULL;
 	list->tail->next = NULL;
 	list->tail->prev = list->head;
-	
-	// 리스트를 반환합니다.
-	return list;
 }
 
-void ListClear(LinkedList *list, bool freeData)
+void ListClear(LinkedList *list)
 {
 	// 리스트의 사이즈가 0이 될때까지 맨 앞의 노드를 삭제합니다.
 	while (list->size)
 	{
-		// freeData 가 true일 경우, data의 동적 할당을 해제합니다.
-		if (freeData)
-		{
-			free(ListGetNode(list, 0)->data);
-		}
 		ListDeleteNode(list, 0);
 	}
 }
 
-void ListAddNode(LinkedList *list, int pos, void *data)
+void ListAddNode(LinkedList *list, int pos, void *data, int size)
 {
 	if (!ListIndexCheck(list, pos, true))
 	{
@@ -84,7 +85,10 @@ void ListAddNode(LinkedList *list, int pos, void *data)
 	
 	// 새로운 노드를 생성하고, 데이터를 넣습니다.
 	Node *node = calloc(1, sizeof(Node));
-	node->data = data;
+	// 메모리 할당-해제의 편의성을 위하여, 노드에서 메모리가 동적으로 할당되어,
+	// data의 메모리를 복사 후 저장하는 형태로 구현하였습니다.
+	node->data = calloc(size, 1);
+	memcpy(node->data, data, size);
 	node->prev = prev;
 	node->next = cur;
 	
@@ -116,9 +120,12 @@ void ListDeleteNode(LinkedList *list, int pos)
 	cur->next->prev = cur->prev;
 	cur->prev->next = cur->next;
 	
-	// 노드의 내용을 지웁니다.
+	// data의 내용을 지우고 할당 해제합니다.
+	memset(cur->data, 0, cur->size);
+	free(cur->data);
+	
+	// 노드의 내용을 지우고 할당 해제합니다.
 	memset(cur, 0, sizeof(Node));
-	// 노드의 메모리 할당을 해제합니다.
 	free(cur);
 }
 
@@ -145,7 +152,7 @@ Node *ListGetNode(LinkedList *list, int pos)
 	// 리스트 순회를 위한 커서를 head 더미노드로 설정합니다.
 	Node *cur = list->head;
 	// 다음 노드를 반환하는 함수포인터를 Next로 설정합니다.
-	Node *(*next)(Node *) = Next;
+	Node *(*next)(Node *) = NodeNext;
 	
 	// 찾아야 하는 위치가 size의 절반보다 뒤에 있다면
 	// 탐색 횟수를 줄이기 위하여, 뒤에서부터 탐색합니다.
@@ -158,7 +165,7 @@ Node *ListGetNode(LinkedList *list, int pos)
 		// 커서를 tail 더미노드로 설정합니다.
 		cur = list->tail;
 		// 다음 노드를 반환하는 함수포인터를 Prev로 설정합니다.
-		next = Prev;
+		next = NodePrev;
 	}
 	
 	// 설정된 값에 따라, 인자로 들어온 위치까지 리스트를 순회합니다.
@@ -209,13 +216,11 @@ int ListFind(LinkedList *list, void *data, int size)
 	Node *cur = list->head->next;
 	for (int i = 0; i < list->size; i++)
 	{
-		// 커서의 동적할당 사이즈를 받아옵니다.
-		int curSize = MALLOC_SIZE(cur->data);
-		
-		// 커서의 사이즈가 data의 사이즈보다 작다면
-		// 최소한 커서에 data와 같은 정보가 들어있지는 않을 것입니다.
-		if (curSize < size)
+		// 커서의 데이터와 찾는 데이터의 사이즈가 일치하지 않는다면
+		// 다음 원소로 넘어갑니다.
+		if (cur->size != size)
 		{
+			cur = NodeNext(cur);
 			continue;
 		}
 		
@@ -224,6 +229,7 @@ int ListFind(LinkedList *list, void *data, int size)
 		{
 			return i;
 		}
+		cur = NodeNext(cur)
 	}
 	return -1;
 }

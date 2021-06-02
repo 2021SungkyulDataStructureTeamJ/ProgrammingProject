@@ -26,15 +26,22 @@
 typedef struct node
 {
 	void *data;
+	int size;
 	struct node *prev;
 	struct node *next;
 } Node;
 
 // 현재 노드의 다음 노드를 반환합니다.
-Node *Next(Node *node);
+Node *NodeNext(Node *node);
 
 // 현재 노드의 이전 노드를 반환합니다.
-Node *Prev(Node *node);
+Node *NodePrev(Node *node);
+
+// 노드의 데이터를 얻습니다.
+void NodeGetData(Node *node, void *data);
+
+// 노드의 데이터를 설정합니다.
+void NodeSetData(Node *node, void *data, int size);
 
 // linked list
 typedef struct
@@ -45,13 +52,13 @@ typedef struct
 } LinkedList;
 
 // 초기화된 새로운 리스트를 반환합니다.
-LinkedList *ListNew();
+void ListInit(LinkedList *list);
 
 // 리스트의 모든 원소를 제거합니다.
-void ListClear(LinkedList *list, bool freeData);
+void ListClear(LinkedList *list);
 
 // 해당 위치에 새로운 노드를 추가합니다.
-void ListAddNode(LinkedList *list, int pos, void *data);
+void ListAddNode(LinkedList *list, int pos, void *data, int size);
 
 // 해당 위치의 노드를 제거합니다.
 void ListDeleteNode(LinkedList *list, int pos);

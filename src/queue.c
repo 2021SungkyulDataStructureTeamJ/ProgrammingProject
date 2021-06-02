@@ -1,20 +1,19 @@
 ﻿#include "queue.h"
 
-Queue *QueueNew()
+void *QueueInit(Queue *queue)
 {
-	return ListNew();
+	ListInit(queue);
 }
 
-void Enqueue(Queue *queue, void *data)
+void QueuePush(Queue *queue, void *data, int size)
 {
-	ListAddNode(queue, ListSize(queue), data);
+	ListAddNode(queue, ListSize(queue), data, size);
 }
 
-void Dequeue(Queue *queue)
+void QueuePop(Queue *queue)
 {
 	ListDeleteNode(queue, 0);
 }
-
 
 void *QueuePeek(Queue *queue)
 {
@@ -29,4 +28,9 @@ int QueueSize(Queue *queue)
 bool QueueIsEmpty(Queue *queue)
 {
 	return ListIsEmpty(queue);
+}
+
+void QueueClear(Queue *queue)
+{
+	ListClear(queue);
 }
