@@ -1,4 +1,7 @@
-﻿#include "list.h"
+﻿#ifndef STACK_H
+#define STACK_H
+
+#include "list.h"
 
 typedef LinkedList Stack;
 
@@ -22,3 +25,5 @@ bool StackIsEmpty(Stack *stack);
 
 // Stack의 모든 원소를 제거합니다.
 void StackClear(Stack *stack);
+
+#endif
