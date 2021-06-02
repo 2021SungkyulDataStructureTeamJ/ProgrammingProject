@@ -30,5 +30,5 @@ void PrintMaze(Maze *m);
 // 미로 탐색(깊이우선탐색)
 void SearchExit(Maze *m);
 
-// 스크린을 지웁니다.
-void ScreenClear();
+// 화면을 지우는 함수입니다.
+void ClearScreen();

@@ -229,7 +229,7 @@ int ListFind(LinkedList *list, void *data, int size)
 		{
 			return i;
 		}
-		cur = NodeNext(cur)
+		cur = NodeNext(cur);
 	}
 	return -1;
 }
