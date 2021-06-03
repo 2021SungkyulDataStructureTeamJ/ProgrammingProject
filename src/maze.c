@@ -162,7 +162,7 @@ void SearchExit(Maze *m)
 			{
 				continue;
 			}
-			if (m->map[ny][nx] == 0)
+			if (m->map[ny][nx] == 0 || m->map[ny][nx] == 2)
 			{
 				continue;
 			}
