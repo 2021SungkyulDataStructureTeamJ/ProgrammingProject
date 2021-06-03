@@ -134,7 +134,6 @@ void SearchExit(Maze *m)
 	Stack stack;
 	StackInit(&stack);
 	StackPush(&stack, &(m->enter), sizeof(Location2D));
-	m->map[m->enter.y][m->enter.x] = 2;
 	
 	// DFS 알고리즘을 이용해 출구를 탐색합니다.
 	while (StackIsEmpty(&stack) == false)
@@ -143,11 +142,18 @@ void SearchExit(Maze *m)
 		NodeGetData(StackPeek(&stack), &cur);
 		StackPop(&stack);
 		
+		if (m->map[cur.y][cur.x] == 0 || m->map[cur.y][cur.x] == 2)
+		{
+			continue;
+		}
+		
 		if (cur.x == m->exit.x && cur.y == m->exit.y)
 		{
 			StackClear(&stack);
 			return;
 		}
+		
+		m->map[cur.y][cur.x] = 2;
 		
 		for (int d = 0; d < 4; d++)
 		{
@@ -162,12 +168,7 @@ void SearchExit(Maze *m)
 			{
 				continue;
 			}
-			if (m->map[ny][nx] == 0 || m->map[ny][nx] == 2)
-			{
-				continue;
-			}
 			
-			m->map[ny][nx] = 2;
 			StackPush(&stack, &((Location2D) {nx, ny}), sizeof(Location2D));
 		}
 	}
