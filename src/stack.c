@@ -17,7 +17,7 @@ void StackPop(Stack *stack)
 
 void *StackPeek(Stack *stack)
 {
-	return ListGetNode(stack, 0);
+	return ListGetNode(stack, ListSize(stack) - 1);
 }
 
 int StackSize(Stack *stack)

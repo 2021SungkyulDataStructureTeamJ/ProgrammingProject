@@ -133,7 +133,7 @@ void SearchExit(Maze *m)
 	// stack을 초기화하고, 시작 좌표를 넣습니다.
 	Stack stack;
 	StackInit(&stack);
-	StackPush(&stack, &m->enter, sizeof(Location2D));
+	StackPush(&stack, &(m->enter), sizeof(Location2D));
 	m->map[m->enter.y][m->enter.x] = 2;
 	
 	// DFS 알고리즘을 이용해 출구를 탐색합니다.
