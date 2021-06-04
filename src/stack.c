@@ -7,12 +7,12 @@ void StackInit(Stack *stack)
 
 void StackPush(Stack *stack, void *data, int size)
 {
-	ListAddNode(stack, ListSize(stack), data, size);
+	ListAddNode(stack, 0, data, size);
 }
 
 void StackPop(Stack *stack)
 {
-	ListDeleteNode(stack, stack->size - 1);
+	ListDeleteNode(stack, 0);
 }
 
 void *StackPeek(Stack *stack)

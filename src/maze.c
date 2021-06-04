@@ -86,6 +86,7 @@ void LoadMaze(Maze *m, char *fname)
 
 void PrintMaze(Maze *m)
 {
+	bool isFinished = false;
 	ClearScreen();
 	printf("전체 미로의 크기 = %d X %d\n", m->width, m->height);
 	
@@ -111,6 +112,9 @@ void PrintMaze(Maze *m)
 				case 5:
 					printf("○");
 					break;
+				case 8:
+					// 8은 maze exit이 발견되었다는 것을 의미합니다.
+					isFinished = true;
 				case 9:
 					printf("◎");
 				default:
@@ -118,6 +122,13 @@ void PrintMaze(Maze *m)
 			}
 		}
 		printf("\n");
+	}
+	
+	if (isFinished)
+	{
+		printf(" ==> 출구가 탐지되었습니다.\n");
+		printf("계속하려면 엔터를 눌러주세요~");
+		getchar();
 	}
 }
 
@@ -133,8 +144,7 @@ void SearchExit(Maze *m)
 	// stack을 초기화하고, 시작 좌표를 넣습니다.
 	Stack stack;
 	StackInit(&stack);
-	StackPush(&stack, &m->enter, sizeof(Location2D));
-	m->map[m->enter.y][m->enter.x] = 2;
+	StackPush(&stack, &(m->enter), sizeof(Location2D));
 	
 	// DFS 알고리즘을 이용해 출구를 탐색합니다.
 	while (StackIsEmpty(&stack) == false)
@@ -143,11 +153,20 @@ void SearchExit(Maze *m)
 		NodeGetData(StackPeek(&stack), &cur);
 		StackPop(&stack);
 		
+		if (m->map[cur.y][cur.x] == 0 || m->map[cur.y][cur.x] == 2)
+		{
+			continue;
+		}
+		
 		if (cur.x == m->exit.x && cur.y == m->exit.y)
 		{
+			// maze 탐색을 완료했다는 의미로, exit 위치의 번호를 8로 변경합니다.
+			m->map[cur.y][cur.x] = 8;
 			StackClear(&stack);
 			return;
 		}
+		
+		m->map[cur.y][cur.x] = 2;
 		
 		for (int d = 0; d < 4; d++)
 		{
@@ -162,12 +181,7 @@ void SearchExit(Maze *m)
 			{
 				continue;
 			}
-			if (m->map[ny][nx] == 0 || m->map[ny][nx] == 2)
-			{
-				continue;
-			}
 			
-			m->map[ny][nx] = 2;
 			StackPush(&stack, &((Location2D) {nx, ny}), sizeof(Location2D));
 		}
 	}

@@ -89,12 +89,16 @@ void ListAddNode(LinkedList *list, int pos, void *data, int size)
 	// data의 메모리를 복사 후 저장하는 형태로 구현하였습니다.
 	node->data = calloc(size, 1);
 	memcpy(node->data, data, size);
+	node->size = size;
 	node->prev = prev;
 	node->next = cur;
 	
 	// 이전 노드, 다음 노드와 새로운 노드를 연결합니다.
 	prev->next = node;
 	cur->prev = node;
+	
+	// 리스트의 사이즈를 증가시킵니다.
+	list->size++;
 }
 
 void ListDeleteNode(LinkedList *list, int pos)
@@ -107,7 +111,7 @@ void ListDeleteNode(LinkedList *list, int pos)
 	}
 	
 	// 잘못된 위치가 들어왔다면 프로그램을 종료합니다.
-	if (ListIndexCheck(list, pos, false))
+	if (!ListIndexCheck(list, pos, false))
 	{
 		perror("잘못된 위치");
 		exit(1);
@@ -119,6 +123,9 @@ void ListDeleteNode(LinkedList *list, int pos)
 	// 삭제할 노드의 연결을 끊습니다.
 	cur->next->prev = cur->prev;
 	cur->prev->next = cur->next;
+	
+	// 리스트의 사이즈를 감소시킵니다.
+	list->size--;
 	
 	// data의 내용을 지우고 할당 해제합니다.
 	memset(cur->data, 0, cur->size);
@@ -139,7 +146,7 @@ Node *ListGetNode(LinkedList *list, int pos)
 	}
 	
 	// 잘못된 위치가 들어왔다면 프로그램을 종료합니다.
-	if (ListIndexCheck(list, pos, false))
+	if (!ListIndexCheck(list, pos, false))
 	{
 		perror("잘못된 위치");
 		exit(1);
