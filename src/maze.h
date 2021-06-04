@@ -1,4 +1,7 @@
-﻿// 미로찾기를 위한 좌표 구조체입니다.
+﻿#ifdef _MAZE_H
+#define _MAZE_H
+
+// 미로찾기를 위한 좌표 구조체입니다.
 typedef struct
 {
 	int x;
@@ -32,3 +35,5 @@ void SearchExit(Maze *m);
 
 // 화면을 지우는 함수입니다.
 void ClearScreen();
+
+#endif
