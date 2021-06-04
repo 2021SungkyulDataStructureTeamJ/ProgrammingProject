@@ -8,5 +8,6 @@ int main()
 	PrintMaze(&maze);
 	SearchExit(&maze);
 	PrintMaze(&maze);
+	ResetMaze(&maze);
 	return 0;
 }
